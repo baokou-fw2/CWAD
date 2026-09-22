@@ -1,0 +1,13 @@
+# Conda environment for CWAD. The authoritative pin is environment/requirements.lock.txt
+# (a pip freeze from the runs); this file exists so `conda env create` gives a base you can
+# then lock. The lockfile must be installed with --no-deps: it pins numpy==1.26.4 while
+# cupy-cuda12x declares numpy>=2, which makes a resolving install fail.
+name: cwad
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  # CUDA 12.x userspace; matched by the lockfile's cu12 wheels, not by a conda cuda toolkit
+  - pip
+  - pip:
+      - -r requirements.lock.txt

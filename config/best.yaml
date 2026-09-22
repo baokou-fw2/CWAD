@@ -1,0 +1,37 @@
+# Documentation only: no script reads this file. The live values are the
+# environment variables in config/best.env, which every entry point sources; the
+# keys below name them.
+source:
+  mode: native
+  manifest: provenance/source_files.sha256
+
+cwad:
+  dual_world: true                       # CWAD_DUAL_WORLD=1
+  student_model: Qwen3.5-0.8B            # CWAD_STUDENT_MODEL_*, hidden 1024
+  teacher: ema_self_teacher              # --teacher-model-path "" -> legacy/ema
+  teacher_update_rate: 0.05              # CWAD_TEACHER_UPDATE_RATE
+  objective: cwad_world_plus_lambda_transition
+  cwad_lambda: 1.0                       # CWAD_LAMBDA
+  cwad_tau: 1.0                          # CWAD_TAU
+  topk: 100                              # CWAD_TOPK
+  alpha: 1.0                             # CWAD_ALPHA
+  gpus: 2                                # CWAD_GPUS
+  prompts_per_rank: 2                    # CWAD_DUAL_WORLD_PROMPTS_PER_RANK
+  train_batch_size: 4                    # derived: gpus * prompts_per_rank
+  ppo_mini_batch_size: 4                 # derived: train_batch_size
+  rollout_n: 1                           # CWAD_DUAL_WORLD_ROLLOUT_N
+  rollout_temperature: 2.0
+  rollout_gpu_memory_utilization: 0.20
+  max_prompt_length: 4096
+  max_response_length: 512
+  max_image_pixels: 1048576              # CWAD_MAX_IMAGE_PIXELS
+  attention: sdpa                        # CWAD_ATTN_IMPLEMENTATION
+  checkpoint_every: 25
+  student_images: images                 # data.image_key, world A
+  teacher_images: teacher_images         # self_distillation.teacher_image_key, world B
+  priv_teacher_a_key: teacher_world_a_images      # CWAD_PRIV_TEACHER_A_KEY
+  priv_student_b_key: student_world_b_images      # CWAD_PRIV_STUDENT_B_KEY
+  eval_max_tokens: 4096                  # CWAD_EVAL_MAX_TOKENS
+  # `world_b_image_key` is declared in verl/trainer/config/actor/actor.yaml as
+  # null and never set here, so the branch at verl/trainer/ppo/ray_trainer.py:1483
+  # is inert; the two privileged keys above carry the real world-B images.

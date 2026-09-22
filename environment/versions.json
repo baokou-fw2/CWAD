@@ -1,0 +1,15 @@
+{
+  "python": "3.12",
+  "cuda": "12.x",
+  "torch": "2.10.0",
+  "torchvision": "0.25.0",
+  "transformers": "5.5.0",
+  "vllm": "0.18.0",
+  "ray": "2.53.0",
+  "qwen_vl_utils": "0.0.14",
+  "not_in_requirements_lock": {
+    "flash_attn": "2.8.3",
+    "causal_conv1d": "1.6.1",
+    "reason": "The lock is a pip freeze of the environment the CWAD runs used, and neither kernel appears in it: that box has no flash-attn build and no nvcc to compile one, so attention ran with attn_implementation=sdpa (CWAD_ATTN_IMPLEMENTATION in config/best.env). scripts/prepare_env.sh installs both unless --skip-kernels is passed, so they are optional additions on top of the lock, not part of it."
+  }
+}
